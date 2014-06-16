@@ -4,6 +4,12 @@
  */
 
 var Global = Class.extend({
+	key: {
+	  LEFT: 37,
+	  UP: 38,
+	  RIGHT: 39,
+	  DOWN: 40
+	},
 	init: function() {
 		this.scene = new THREE.Scene();
 		this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -11,8 +17,7 @@ var Global = Class.extend({
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.clock = new THREE.Clock();
 		this.camera.position = new THREE.Vector3(0.5,9.5,20);
-		this.controls = new THREE.OrbitControls(this.camera);
-		this.controls.addEventListener('change', this.render.bind(this));		
+		this.input = new Input();
 		document.body.appendChild(this.renderer.domElement);
 		window.addEventListener( 'resize', this.resize.bind(this), false );
 		this.initStats();
@@ -33,12 +38,27 @@ var Global = Class.extend({
 		this.render();
 	}, 
 	render: function() {
+		requestAnimationFrame(this.render.bind(this));	
+		this.updateState();
 		this.renderer.render(this.scene, this.camera);
 		this.stats.update();
-		requestAnimationFrame(this.render.bind(this));
 	},
-	updateState: function() {
+	updateState: function() {	
 		var delta = this.clock.getDelta();
+		if (this.car) {	
+			if (this.input.isPressed(this.key.UP)) {
+				this.car.position.z--;
+			}
+			if (this.input.isPressed(this.key.DOWN)) {
+				this.car.position.z++;
+			}
+			if (this.input.isPressed(this.key.LEFT)) {
+				this.car.position.x--;
+			}
+			if (this.input.isPressed(this.key.RIGHT)) {
+				this.car.position.x++;
+			}
+		}
 	},
 	fillScene: function() {
 		var light = new THREE.AmbientLight( 0x404040 ); // soft white light scene.add( light );
@@ -61,9 +81,8 @@ var Global = Class.extend({
 		loader.load("./models/car.js", this.modelReady.bind(this), "./img/texture/");
 	},
 	modelReady: function(geometry, material) {
-		this.car = geometry;
-		mesh = new THREE.Mesh(geometry, material[0]);
-		this.scene.add(mesh);
+		this.car = new THREE.Mesh(geometry, material[0]);
+		this.scene.add(this.car);
 		this.render();
 	}
 });
