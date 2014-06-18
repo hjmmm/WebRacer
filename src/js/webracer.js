@@ -46,18 +46,7 @@ var Global = Class.extend({
 	updateState: function() {	
 		var delta = this.clock.getDelta();
 		if (this.car) {	
-			if (this.input.isPressed(this.key.UP)) {
-				this.car.position.z--;
-			}
-			if (this.input.isPressed(this.key.DOWN)) {
-				this.car.position.z++;
-			}
-			if (this.input.isPressed(this.key.LEFT)) {
-				this.car.position.x--;
-			}
-			if (this.input.isPressed(this.key.RIGHT)) {
-				this.car.position.x++;
-			}
+			this.car.update(this.input, delta);
 		}
 	},
 	fillScene: function() {
@@ -77,12 +66,11 @@ var Global = Class.extend({
 		this.scene.add(this.ground);
 	},
 	loadModels: function() {
-		var loader = new THREE.JSONLoader();
-		loader.load("./models/car.js", this.modelReady.bind(this), "./img/texture/");
+		this.car = new Car(this.controls);
+		this.car.loadMesh("./img/texture/", this.modelReady.bind(this));		
 	},
-	modelReady: function(geometry, material) {
-		this.car = new THREE.Mesh(geometry, material[0]);
-		this.scene.add(this.car);
+	modelReady: function(mesh) {
+		this.scene.add(mesh);
 		this.render();
 	}
 });

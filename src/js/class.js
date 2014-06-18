@@ -63,7 +63,8 @@
   };
 })();
 
-// The .bind method from Prototype.js 
+// The .bind method 
+/*
 Function.prototype.bind = function(){ 
   var fn = this, args = Array.prototype.slice.call(arguments), object = args.shift(); 
   return function(){ 
@@ -71,3 +72,4 @@ Function.prototype.bind = function(){
       args.concat(Array.prototype.slice.call(arguments))); 
   }; 
 };
+*/
