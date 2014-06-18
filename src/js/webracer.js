@@ -67,10 +67,11 @@ var Global = Class.extend({
 	},
 	loadModels: function() {
 		this.car = new Car(this.controls);
-		this.car.loadMesh("./img/texture/", this.modelReady.bind(this));		
+		this.car.loadMesh("./img/texture/", this.modelReady.bind(this));
 	},
 	modelReady: function(mesh) {
 		this.scene.add(mesh);
+		mesh.add(this.camera);
 		this.render();
 	}
 });

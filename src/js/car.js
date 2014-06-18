@@ -32,7 +32,7 @@ var Car = Class.extend({
 			rotation *= -1 * direction;
 			
 			this.mesh.rotateOnAxis(this.z_axis, rotation);
-			this.mesh.translateZ(direction);
+			this.mesh.translateZ(direction * 10);
 		}
 	}
 });
