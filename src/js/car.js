@@ -26,13 +26,13 @@ var Car = Class.extend({
 		if (this.mesh) {
 			var rotation = input.isPressed(this.controls.RIGHT) ? -1 : 0;
 			rotation += input.isPressed(this.controls.LEFT) ? 1 : 0;
-			rotation = rotation * Math.PI/10;			
-			if (rotation) {
-				this.mesh.rotateOnAxis(this.z_axis, rotation);
-			}
-			var distance = input.isPressed(this.controls.UP) ? -1 : 0;
-			distance += input.isPressed(this.controls.DOWN) ? 1 : 0;
-			this.mesh.translateZ(distance);
+			rotation = rotation * Math.PI/10;
+			var direction = input.isPressed(this.controls.UP) ? -1 : 0;
+			direction += input.isPressed(this.controls.DOWN) ? 1 : 0;
+			rotation *= -1 * direction;
+			
+			this.mesh.rotateOnAxis(this.z_axis, rotation);
+			this.mesh.translateZ(direction);
 		}
 	}
 });
