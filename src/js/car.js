@@ -8,16 +8,17 @@ var Car = Class.extend({
 	init: function(controls) {
 		this.ready = false;
 		this.controls = controls || { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
+		this.dynamic = true;
 	},
 	loadMesh: function(texturePath, callback) {
 		var loader = new THREE.JSONLoader();
-		loader.load("./models/car.js", this.loadCallback.bind(this, callback), texturePath);
+		loader.load("models/car.js", this.loadCallback.bind(this, callback), texturePath);
 	},
 	loadCallback: function(callback, geometry, material) {
 		console.log(arguments);
 		this.ready = true;
 		this.mesh = new THREE.Mesh(geometry, material[0]);
-		callback(this.mesh);
+		callback(this.mesh, true);
 	},
 	setControls: function(controls) {
 		this.controls = controls;
@@ -32,7 +33,7 @@ var Car = Class.extend({
 			rotation *= -1 * direction;
 			
 			this.mesh.rotateOnAxis(this.z_axis, rotation);
-			this.mesh.translateZ(direction * 10);
+			this.mesh.translateZ(direction * 2);
 		}
 	}
 });

@@ -68,10 +68,14 @@ var Global = Class.extend({
 	loadModels: function() {
 		this.car = new Car(this.controls);
 		this.car.loadMesh("./img/texture/", this.modelReady.bind(this));
+		var world = new World(levels[0]);
+		world.loadMesh("./img/texture/", new THREE.Vector3(-60,10,-60), this.modelReady.bind(this));
 	},
-	modelReady: function(mesh) {
+	modelReady: function(mesh, protagonic) {
 		this.scene.add(mesh);
-		mesh.add(this.camera);
+		if (protagonic) {
+			mesh.add(this.camera);
+		}
 		this.render();
 	}
 });
