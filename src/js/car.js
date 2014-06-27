@@ -5,10 +5,12 @@
  
 var Car = Class.extend({
 	z_axis: new THREE.Vector3(0,1,0),
-	init: function(controls) {
+	speed: 0,
+	init: function(controls, maxSpeed) {
 		this.ready = false;
 		this.controls = controls || { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
 		this.dynamic = true;
+		this.maxSpeed = maxSpeed || 10;
 	},
 	loadMesh: function(texturePath, callback) {
 		var loader = new THREE.JSONLoader();
@@ -27,13 +29,21 @@ var Car = Class.extend({
 		if (this.mesh) {
 			var rotation = input.isPressed(this.controls.RIGHT) ? -1 : 0;
 			rotation += input.isPressed(this.controls.LEFT) ? 1 : 0;
-			rotation = rotation * Math.PI/10;
-			var direction = input.isPressed(this.controls.UP) ? -1 : 0;
-			direction += input.isPressed(this.controls.DOWN) ? 1 : 0;
-			rotation *= -1 * direction;
+			rotation = rotation * Math.PI/20;
+			var direction = input.isPressed(this.controls.UP) ? 1 : 0;
+			direction += input.isPressed(this.controls.DOWN) ? -1 : 0;
 			
-			this.mesh.rotateOnAxis(this.z_axis, rotation);
-			this.mesh.translateZ(direction * 2);
+			this.updateSpeed(direction, delta);
+
+			this.mesh.rotateOnAxis(this.z_axis, rotation * this.speed/10);
+			this.mesh.translateZ(-1 * this.speed);
 		}
+	},
+	updateSpeed: function(direction, delta) {
+		var change = direction == -1 ? -0.5 : 0.2;
+		change = direction == 0 ? -0.2 : change;
+		this.speed += change;
+		this.speed = this.speed > this.maxSpeed ? this.maxSpeed : this.speed;
+		this.speed = this.speed < 0 ? 0 : this.speed;
 	}
 });

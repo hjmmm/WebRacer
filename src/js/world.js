@@ -21,18 +21,29 @@ var World = Class.extend({
 					(this.level.cellSize + this.level.cellPadding) * (i%this.level.cellsPerRow), 
 					0, 
 					(this.level.cellSize + this.level.cellPadding) * Math.floor(i/this.level.cellsPerRow));
-				mesh.scale.y = Math.random();
 				this.world.add(mesh);
 			}
 		}
+		this.world.add(this.createGround());
 		callback(this.world);
+	},
+	createGround: function() {
+		var size = new THREE.Vector2((this.level.cellSize + this.level.cellPadding) * this.level.cellsPerRow, (this.level.cellSize + this.level.cellPadding) * (this.level.cells.length / this.level.cellsPerRow));
+		var geometry = new THREE.PlaneGeometry(size.x, size.y); 
+		var material = new THREE.MeshBasicMaterial( {color: 0xDDDDDD} ); 
+		var ground = new THREE.Mesh(geometry, material);
+		ground.translateY(this.level.defaultHeight * -1/2);
+		ground.translateX(size.x/2);
+		ground.translateZ(size.y/2);
+		ground.rotateX(-Math.PI/2);
+		return ground;
 	}
 });
 
 var levels = {
 	0: {
 		name: "Binary City",
-		cellSize: 20,
+		cellSize: 60,
 		cellPadding: 0.2, 
 		cellsPerRow: 20,
 		defaultHeight: 20,
@@ -54,7 +65,7 @@ var levels = {
 			1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1,
 			1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1,
 			1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 
 		]
 	}
 };
