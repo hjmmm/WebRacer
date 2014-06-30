@@ -38,12 +38,12 @@ var Global = Class.extend({
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		this.render();
 	}, 
-	render: function() {
-		requestAnimationFrame(this.render.bind(this));
+	render: function() {		
 		this.findObject();
 		this.updateState();
 		this.renderer.render(this.scene, this.camera);
-		this.stats.update();
+		requestAnimationFrame(this.render.bind(this));
+		this.stats.update();		
 	},
 	findObject : function() {
 		if(this.input.lastClick) {
@@ -85,7 +85,7 @@ var Global = Class.extend({
 		this.car = new Car(this.controls);
 		this.car.loadMesh("./img/texture/", this.modelReady.bind(this));
 		var world = new World(levels[0]);
-		world.loadMesh("./img/texture/", new THREE.Vector3(-60,10,-60), this.modelReady.bind(this));
+		world.loadMesh("./img/texture/", new THREE.Vector3(-60,0,-60), this.modelReady.bind(this));
 	},
 	modelReady: function(mesh, protagonic) {
 		this.scene.add(mesh);
