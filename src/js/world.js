@@ -33,8 +33,8 @@ var World = Class.extend({
 		var material = new THREE.MeshBasicMaterial( {color: 0xDDDDDD} ); 
 		var ground = new THREE.Mesh(geometry, material);
 		ground.translateY(this.level.defaultHeight * -1/2);
-		ground.translateX(size.x/2);
-		ground.translateZ(size.y/2);
+		ground.translateX(size.x/2 - this.level.cellSize/2);
+		ground.translateZ(size.y/2 - this.level.cellSize/2);
 		ground.rotateX(-Math.PI/2);
 		return ground;
 	}
