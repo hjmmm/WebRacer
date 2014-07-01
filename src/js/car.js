@@ -33,16 +33,17 @@ var Car = Class.extend({
 			var direction = input.isPressed(this.controls.UP) ? 1 : 0;
 			direction += input.isPressed(this.controls.DOWN) ? -1 : 0;
 			
+			delta = delta * 10;
 			this.updateSpeed(direction, delta);
 
-			this.mesh.rotateOnAxis(this.z_axis, rotation * this.speed/10);
-			this.mesh.translateZ(-1 * this.speed);
+			this.mesh.rotateOnAxis(this.z_axis, rotation * delta * this.speed/10);
+			this.mesh.translateZ(-1 * this.speed * delta);
 		}
 	},
 	updateSpeed: function(direction, delta) {
 		var change = direction == -1 ? -0.5 : 0.2;
 		change = direction == 0 ? -0.2 : change;
-		this.speed += change;
+		this.speed += change * delta;
 		this.speed = this.speed > this.maxSpeed ? this.maxSpeed : this.speed;
 		this.speed = this.speed < 0 ? 0 : this.speed;
 	}

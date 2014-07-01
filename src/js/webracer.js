@@ -43,7 +43,7 @@ var Global = Class.extend({
 		this.updateState();
 		this.renderer.render(this.scene, this.camera);
 		requestAnimationFrame(this.render.bind(this));
-		this.stats.update();		
+		this.stats.update();
 	},
 	findObject : function() {
 		if(this.input.lastClick) {
@@ -92,6 +92,7 @@ var Global = Class.extend({
 		if (protagonic) {
 			this.placeholders.purchase.position.set(0,10,30);
 			mesh.add(this.placeholders.purchase);
+			mesh.rotateOnAxis(new THREE.Vector3(0,1,0),Math.PI);
 		}
 		this.render();
 	}
