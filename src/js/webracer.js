@@ -62,15 +62,16 @@ var Global = Class.extend({
 	updateState: function() {	
 		var delta = this.clock.getDelta();
 		if (this.car && this.car.mesh) {
-			this.car.update(this.input, delta);
-
+			var cell = this.world.findCellWithBoundingBox(this.car.mesh.position, this.car.mesh.geometry.boundingBox);
+			this.car.update(this.input, delta, cell);
+			
 			// Camera update
 			this.car.mesh.updateMatrixWorld();
 			this.camera.position.set(0,0,0);
 			this.camera.updateMatrixWorld();
 			this.camera.applyMatrix(this.placeholders.purchase.matrixWorld);
-			this.camera.lookAt(this.car.mesh.position);
-			this.camera.rotateOnAxis(new THREE.Vector3(1,0,0),0.4);
+			this.camera.lookAt(this.car.mesh.position.clone());
+			this.camera.rotateOnAxis(new THREE.Vector3(1,0,0),0.4);			
 		}
 	},
 	fillScene: function() {
@@ -80,19 +81,23 @@ var Global = Class.extend({
 		light.position.set( 50, 50, 50 ); 
 		this.scene.add( light );		
 		this.loadModels();
+		var axisHelper = new THREE.AxisHelper( 50 );
+		this.scene.add(axisHelper);
 	},
-	loadModels: function() {
+	loadModels: function() {		
 		this.car = new Car(this.controls);
 		this.car.loadMesh("./img/texture/", this.modelReady.bind(this));
-		var world = new World(levels[0]);
-		world.loadMesh("./img/texture/", new THREE.Vector3(-60,0,-60), this.modelReady.bind(this));
+		this.world = new World(levels[0]);
+		this.world.loadMesh("./img/texture/", new THREE.Vector3(-80,0,-80), this.modelReady.bind(this));
 	},
 	modelReady: function(mesh, protagonic) {
 		this.scene.add(mesh);
 		if (protagonic) {
+			var axisHelper = new THREE.AxisHelper( 5 );
 			this.placeholders.purchase.position.set(0,10,30);
 			mesh.add(this.placeholders.purchase);
-			mesh.rotateOnAxis(new THREE.Vector3(0,1,0),Math.PI);
+			mesh.add(axisHelper);
+			mesh.rotateOnAxis(new THREE.Vector3(0,1,0), Math.PI);
 		}
 		this.render();
 	}

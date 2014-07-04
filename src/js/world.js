@@ -23,11 +23,12 @@ var World = Class.extend({
 			if (this.level.cells[i] != 0) {
 				var mesh = new THREE.Mesh(geometry, material[texture]);
 				texture = (texture + 1) % material.length;
+				mesh.name = i;
 				mesh.scale.y = Math.random() * 5 + 1;
 				mesh.position = new THREE.Vector3(
-					(this.level.cellSize + this.level.cellPadding) * (i%this.level.cellsPerRow), 
+					(this.level.cellSize + this.level.cellPadding) * (i%this.level.cellsPerRow) + this.level.cellSize/2, 
 					this.level.defaultHeight * mesh.scale.y / 2,
-					(this.level.cellSize + this.level.cellPadding) * Math.floor(i/this.level.cellsPerRow));				
+					(this.level.cellSize + this.level.cellPadding) * Math.floor(i/this.level.cellsPerRow) + this.level.cellSize/2);
 				this.world.add(mesh);
 			}
 		}
@@ -39,10 +40,19 @@ var World = Class.extend({
 		var geometry = new THREE.PlaneGeometry(size.x, size.y); 
 		var material = new THREE.MeshBasicMaterial( {color: 0xAAAAAA} ); 
 		var ground = new THREE.Mesh(geometry, material);
-		ground.translateX(size.x/2 - this.level.cellSize/2);
-		ground.translateZ(size.y/2 - this.level.cellSize/2);
+		ground.translateX(size.x/2);
+		ground.translateZ(size.y/2);
 		ground.rotateX(-Math.PI/2);
 		return ground;
+	}, 
+	findCellWithBoundingBox: function(center, box) {
+		var col = Math.floor((center.x - this.world.position.x) / (this.level.cellSize + this.level.cellPadding));
+		var row = Math.floor((center.z - this.world.position.z) / (this.level.cellSize + this.level.cellPadding));
+		var i = row * this.level.cellsPerRow + col;
+		if (this.level.cells[i]) {
+			console.log("Collision detected", center.x, center.z, row, col, i, this.level.cells[i]);
+		}
+		return this.level.cells[i];
 	}
 });
 
@@ -55,7 +65,7 @@ var levels = {
 		defaultHeight: 20,
 		cells: [ 
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-			1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
+			1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
 			1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1,
 			1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1,
 			1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
